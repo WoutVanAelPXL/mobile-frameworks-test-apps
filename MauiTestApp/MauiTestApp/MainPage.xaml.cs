@@ -1,4 +1,8 @@
-﻿namespace MauiTestApp
+﻿#if ANDROID
+    using System.Net;
+#endif
+
+namespace MauiTestApp
 {
     public partial class MainPage : ContentPage
     {
@@ -6,6 +10,8 @@
         public MainPage()
         {
             InitializeComponent();
+
+            DisplayPdf("maui.pdf");
 
         }
 
@@ -97,6 +103,11 @@
                     HeroImg.Source = ImageSource.FromFile(localFilePath);
                 }
 
+                else if (result.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+                {
+                    DisplayPdf(localFilePath);
+                }
+
                 // show where the photo has been stored
                 return "photo has been stored at " + localFilePath;
 
@@ -106,6 +117,22 @@
                 // The user canceled or something went wrong
                 return "Something went wrong";
             }
+        }
+
+        public void DisplayPdf(string filePath)
+        {
+#if ANDROID
+            Microsoft.Maui.Handlers.WebViewHandler.Mapper.AppendToMapping("pdfviewer", (handler, View) =>
+            {
+                handler.PlatformView.Settings.AllowFileAccess = true;
+                handler.PlatformView.Settings.AllowFileAccessFromFileURLs = true;
+                handler.PlatformView.Settings.AllowUniversalAccessFromFileURLs = true;
+            });
+
+            PdfWebView.Source = $"file:///android_asset/pdfjs/web/viewer.html?file=file:///android_asset/{WebUtility.UrlEncode(filePath)}";
+#else
+            PdfWebView.Source = filePath;
+#endif
         }
     }
 

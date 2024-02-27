@@ -46,6 +46,15 @@
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2" />
 
+            <Grid VerticalOptions="FillAndExpand" HeightRequest="750" 
+                  Margin="10">
+
+                <WebView x:Name="PdfWebView" VerticalOptions="FillAndExpand"
+                         HorizontalOptions="FillAndExpand" />
+            </Grid>
+
+
+
         </VerticalStackLayout>
     </ScrollView>
 
