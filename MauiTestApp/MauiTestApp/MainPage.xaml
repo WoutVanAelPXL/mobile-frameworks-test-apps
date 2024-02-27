@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiTestApp.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <Image
+                Source="dotnet_bot.png"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                SemanticProperties.Description="dot net bot in a race car number eight" />
+
+            <Label
+                Text=".Maui App to test wanted functionality"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Button
+                x:Name="TakePhotoBtn"
+                Text="Take photo" 
+                SemanticProperties.Hint="Opens the camera to let you take a picture"
+                Clicked="TakePhotoAsync"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="PickPhotoBtn"
+                Text="Pick photo" 
+                SemanticProperties.Hint="lets you choose a picture from storage"
+                Clicked="PickPhotoAsync"
+                HorizontalOptions="Fill" />
+
+            <Label
+                x:Name="FeedbackLabel"
+                Text="Result: ..."
+                Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level2" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
