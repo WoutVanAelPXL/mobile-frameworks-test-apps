@@ -8,6 +8,7 @@
             Padding="30,0"
             Spacing="25">
             <Image
+                x:Name="HeroImg"
                 Source="dotnet_bot.png"
                 HeightRequest="185"
                 Aspect="AspectFit"
@@ -30,6 +31,13 @@
                 Text="Pick photo" 
                 SemanticProperties.Hint="lets you choose a picture from storage"
                 Clicked="PickPhotoAsync"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="PickFileBtn"
+                Text="Pick File" 
+                SemanticProperties.Hint="lets you choose a file from storage"
+                Clicked="PickFileAsync"
                 HorizontalOptions="Fill" />
 
             <Label
