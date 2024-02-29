@@ -51,8 +51,14 @@ export class PhotoService {
           directory: Directory.Data
         });
 
-        // Web platform only: Load the photo as base64 data
-        photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+        // Ensure readFile.data is a string before using it
+        if (typeof readFile.data === 'string') {
+          // Web platform only: Load the photo as base64 data
+          photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+        } else {
+          // Handle the case where readFile.data is not a string
+          console.error('File data is not a string:', readFile.data);
+        }
       }
     }
   }
