@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      Uploadzone
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,31 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Uploadzone</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-content>
+    <ion-fab slot="fixed" horizontal="center" vertical="bottom">
+      <ion-fab-button>
+        <ion-icon name="folder-open"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="start">
+        <ion-fab-button (click)="selectPhotoFromStorage()">
+          <ion-icon name="image"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+      <ion-fab-list side="end">
+        <ion-fab-button (click)="file.click()">
+          <ion-icon name="document"></ion-icon>
+          <input type="file"
+                   #file
+                   [multiple]="false"
+                   (change)="onFileSelected($event)"
+                   (click)="file.value = ''"
+                   style="display:none" />
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+  </ion-content>
 </ion-content>

@@ -35,6 +35,27 @@ export class PhotoService {
     });
   }
 
+  public async pickFromPhotoLibrary() {
+    // Pick a photo
+    const pickedPhoto = (await Camera.pickImages({
+      quality: 100,
+      limit: 1
+    })).photos[0];
+
+    // Save the picture and add it to photo collection
+    const savedImageFile = await this.savePicture(pickedPhoto as Photo);
+    this.photos.unshift(savedImageFile);
+
+    Preferences.set({
+      key: this.PHOTO_STORAGE,
+      value: JSON.stringify(this.photos),
+    });
+  }
+
+  public async pickFromStorage(file: File) {
+    // Read & save file or something :)
+  }
+
   public async loadSaved() {
     // Retrieve cached photo array data
     const { value } = await Preferences.get({ key: this.PHOTO_STORAGE });
