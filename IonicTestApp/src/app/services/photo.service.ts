@@ -10,7 +10,9 @@ import { Platform } from '@ionic/angular';
 })
 export class PhotoService {
   public photos: UserPhoto[] = [];
+  public files: UserFile[] = [];
   private PHOTO_STORAGE: string = 'photos';
+  private FILE_STORAGE: string = 'files';
   private platform: Platform;
 
   constructor(platform: Platform) {
@@ -52,8 +54,77 @@ export class PhotoService {
     });
   }
 
-  public async pickFromStorage(file: File) {
+  public async saveFileToStorage(pickedFile: File) {
     // Read & save file or something :)
+    const reader = new FileReader();
+
+    // Start reading the file and await for it to be loaded
+    const arrayBuffer: ArrayBuffer = await new Promise((resolve, reject) => {
+      reader.onloadend = () => {
+        if (reader.readyState === FileReader.DONE) {
+          resolve(reader.result as ArrayBuffer);
+        } else {
+          reject(new Error("FileReader error"));
+        }
+      };
+
+      reader.readAsArrayBuffer(pickedFile);
+    });
+
+    // Fetch the photo, read as a blob, then convert to base64 format
+    const blob = new Blob([arrayBuffer], { type: pickedFile.type });
+
+    const base64Data = await this.convertBlobToBase64(blob) as string;
+
+    console.log(pickedFile);
+
+    const savedFile = await Filesystem.writeFile({
+      path: pickedFile.name,
+      data: base64Data,
+      directory: Directory.Data
+    });
+
+    console.log(savedFile);
+
+    const readFile = await Filesystem.readFile({
+      path: pickedFile.name,
+      directory: Directory.Data
+    })
+
+    console.log(readFile);
+
+    let savedFileAsUserFile: UserFile;
+    if (this.platform.is('hybrid')) {
+      // Display the new image by rewriting the 'file://' path to HTTP
+      // Details: https://ionicframework.com/docs/building/webview#file-protocol
+      savedFileAsUserFile = {
+        fileName: pickedFile.name,
+        filepath: savedFile.uri,
+        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+        fileType: pickedFile.type
+      };
+    }
+    else {
+      // Use webPath to display the new image instead of base64 since it's
+      // already loaded into memory
+      savedFileAsUserFile = {
+        fileName: pickedFile.name,
+        filepath: pickedFile.name,
+        webviewPath: window.URL.createObjectURL(blob),
+        fileType: pickedFile.type
+      };
+
+      console.log(blob.type);
+      console.log(window.URL.createObjectURL(blob));
+
+    }
+
+    this.files.unshift(savedFileAsUserFile);
+
+    Preferences.set({
+      key: this.FILE_STORAGE,
+      value: JSON.stringify(this.files),
+    });
   }
 
   public async loadSaved() {
@@ -76,6 +147,33 @@ export class PhotoService {
         if (typeof readFile.data === 'string') {
           // Web platform only: Load the photo as base64 data
           photo.webviewPath = `data:image/jpeg;base64,${readFile.data}`;
+        } else {
+          // Handle the case where readFile.data is not a string
+          console.error('File data is not a string:', readFile.data);
+        }
+      }
+    }
+
+    // [Files]
+    const fileValue = (await Preferences.get({ key: this.FILE_STORAGE })).value;
+    this.files = (fileValue ? JSON.parse(fileValue) : []) as UserFile[];
+
+    if (!this.platform.is('hybrid')) {
+      // Display the photo by reading into base64 format
+      for (let file of this.files) {
+        console.log(file);
+        // Read each saved photo's data from the Filesystem
+        const readFile = await Filesystem.readFile({
+          path: file.filepath,
+          directory: Directory.Data
+        });
+
+        console.log(file);
+
+        // Ensure readFile.data is a string before using it
+        if (typeof readFile.data === 'string') {
+          // Web platform only: Load the photo as base64 data
+          file.webviewPath = `data:${file.fileType};base64,${readFile.data}`;
         } else {
           // Handle the case where readFile.data is not a string
           console.error('File data is not a string:', readFile.data);
@@ -166,4 +264,11 @@ export class PhotoService {
 export interface UserPhoto {
   filepath: string;
   webviewPath?: string;
+}
+
+export interface UserFile {
+  fileName: string;
+  filepath: string;
+  webviewPath?: string;
+  fileType: string;
 }
