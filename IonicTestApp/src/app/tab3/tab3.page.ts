@@ -8,31 +8,42 @@ import { FileOpener, FileOpenerOptions } from '@capacitor-community/file-opener'
 import { Browser } from '@capacitor/browser';
 import { CommonModule } from '@angular/common';
 import { Platform } from '@ionic/angular';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: true,
-  imports: [IonImg, IonFabList, IonFab, IonIcon, IonFabButton, IonCol, IonGrid, IonRow, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, CommonModule],
+  imports: [IonImg, IonFabList, IonFab, IonIcon, IonFabButton, IonCol, IonGrid, IonRow, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, CommonModule, PdfViewerModule],
 })
 export class Tab3Page {
   errorMessage: string = '';
+  public pdfSrc: string = '';
 
   constructor(public photoService: PhotoService, private platform: Platform) {
     addIcons({ image, document, folderOpen });
+  }
+
+  async ngOnInit() {
+    await this.photoService.loadSaved();
+    this.pdfSrc = this.photoService.files.find((file) => file.fileType == 'application/pdf')?.webviewPath ?? '';
   }
 
   selectPhotoFromStorage() {
     this.photoService.pickFromPhotoLibrary();
   }
 
-  onFileSelected(event: any) {
+  async onFileSelected(event: any) {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
       // send to service here
-      this.photoService.saveFileToStorage(selectedFile as File);
+      await this.photoService.saveFileToStorage(selectedFile as File);
+
+      if (selectedFile.type == 'application/pdf') {
+        this.pdfSrc = this.photoService.files[0].webviewPath ?? this.pdfSrc;
+      }
     }
   }
 

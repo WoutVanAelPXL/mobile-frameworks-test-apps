@@ -17,12 +17,16 @@
     <ion-grid>
       <ion-row>
         <ion-col size="6" *ngFor="let file of photoService.files; index as position">
-          <a href="javascript:void(0)" (click)="open(file.webviewPath, file.filepath, file.fileType)">{{ file.fileName }}</a>
+          <a href="javascript:void(0)" (click)="open(file.webviewPath, file.filepath, file.fileType)">{{ file.fileName
+            }}</a>
         </ion-col>
       </ion-row>
     </ion-grid>
 
     <p>{{ errorMessage }}</p>
+
+    <pdf-viewer [src]="pdfSrc" [render-text]="true" [original-size]="false"
+      style="width: 400px; height: 500px"></pdf-viewer>
 
     <ion-fab slot="fixed" horizontal="center" vertical="bottom">
       <ion-fab-button>
@@ -36,12 +40,8 @@
       <ion-fab-list side="end">
         <ion-fab-button (click)="file.click()">
           <ion-icon name="document"></ion-icon>
-          <input type="file"
-                   #file
-                   [multiple]="false"
-                   (change)="onFileSelected($event)"
-                   (click)="file.value = ''"
-                   style="display:none" />
+          <input type="file" #file [multiple]="false" (change)="onFileSelected($event)" (click)="file.value = ''"
+            style="display:none" />
         </ion-fab-button>
       </ion-fab-list>
     </ion-fab>
