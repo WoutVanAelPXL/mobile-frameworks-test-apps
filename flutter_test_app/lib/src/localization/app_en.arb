@@ -1,0 +1,9 @@
+{
+  "@@author": "mister Wout",
+  "@@locale": "en",
+  "appTitle": "flutter_test_app",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "takePhotoViewDescription": "Taking photo's in the application"
+}

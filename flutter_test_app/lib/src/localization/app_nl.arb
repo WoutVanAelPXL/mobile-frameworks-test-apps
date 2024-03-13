@@ -1,0 +1,12 @@
+{
+    "@@author": "mister Wout",
+    "@@locale": "nl",
+    "appTitle": "flutter_test_app",
+    "@appTitle": {
+        "description": "De titel van de applicatie"
+    },
+    "takePhotoViewDescription": "Foto's nemen via de applicatie",
+    "@takePhotoViewDescription": {
+        "description": "Knoptext om naar de pagina te gaan waar je foto's kan nemen in de app"
+    }
+}
