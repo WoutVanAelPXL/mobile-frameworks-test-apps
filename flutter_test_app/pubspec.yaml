@@ -17,8 +17,11 @@ dependencies:
     sdk: flutter
   image_picker: ^1.0.7
   mime: ^1.0.5
+  open_filex: ^4.4.0
   path: ^1.9.0
   path_provider: ^2.1.2
+  pdf_render: ^1.4.6
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +38,4 @@ flutter:
   assets:
     # Add assets from the images directory to the application.
     - assets/images/
+    - assets/files/

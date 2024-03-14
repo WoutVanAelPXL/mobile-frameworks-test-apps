@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/src/display_pdf_feature/display_pdf_view.dart';
 import 'package:mime/mime.dart';
 
 import '../take_photo_feature/take_photo_view.dart';
@@ -40,6 +41,17 @@ class PickFilesView extends StatelessWidget {
                       // Pass the automatically generated path to
                       // the DisplayPictureScreen widget.
                       imagePath: file.path,
+                    ),
+                  ),
+                );
+              } else if (mimeType.contains('pdf')) {
+                // send file to display_pdf_view
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DisplayPdfView(
+                      // Pass the automatically generated path to
+                      // the DisplayPdfView widget.
+                      pdfPath: file.path,
                     ),
                   ),
                 );
