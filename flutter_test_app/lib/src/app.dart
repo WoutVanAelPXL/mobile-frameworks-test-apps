@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test_app/src/display_pdf_feature/display_pdf_view.dart';
 import 'package:flutter_test_app/src/home/home_view.dart';
+import 'package:flutter_test_app/src/pick_files_feature/pick_files_view.dart';
+import 'package:flutter_test_app/src/take_photo_feature/take_photo_view.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
@@ -75,6 +78,12 @@ class MyApp extends StatelessWidget {
                     return const SampleItemDetailsView();
                   case SampleItemListView.routeName:
                     return const SampleItemListView();
+                  case TakePhotoView.routeName:
+                    return const TakePhotoView();
+                  case PickFilesView.routeName:
+                    return const PickFilesView();
+                  case DisplayPdfView.routeName:
+                    return const DisplayPdfView();
                   case HomeView.routeName:
                   default:
                     return const HomeView();
