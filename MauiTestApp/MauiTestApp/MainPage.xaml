@@ -46,6 +46,13 @@
                 Style="{StaticResource SubHeadline}"
                 SemanticProperties.HeadingLevel="Level2" />
 
+            <Button
+                x:Name="OpenPdfBtn"
+                Text="Open PDF" 
+                SemanticProperties.Hint="lets you open the testpdf with a dedicated app"
+                Clicked="OpenPdfAsync"
+                HorizontalOptions="Fill" />
+
             <Grid VerticalOptions="FillAndExpand" HeightRequest="750" 
                   Margin="10">
 

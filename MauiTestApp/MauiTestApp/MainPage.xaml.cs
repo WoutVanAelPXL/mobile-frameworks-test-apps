@@ -6,6 +6,7 @@ namespace MauiTestApp
 {
     public partial class MainPage : ContentPage
     {
+        private string? _pickedPdf;
 
         public MainPage()
         {
@@ -35,6 +36,29 @@ namespace MauiTestApp
         private async void PickFileAsync(object sender, EventArgs e)
         {
             string result = await PickFile();
+
+            FeedbackLabel.Text = result;
+        }
+
+        private async void OpenPdfAsync(object sender, EventArgs e)
+        {
+            string pdfFilePath = Path.Combine(FileSystem.CacheDirectory, "maui.pdf");
+
+            if (_pickedPdf != null)
+            {
+                pdfFilePath = _pickedPdf;
+            }
+
+            // Copy the test pdf from the package to the CacheDirectory, otherwise it cannot be launched.
+            if (!File.Exists(pdfFilePath))
+            {
+                await using Stream sourceStream = await FileSystem.OpenAppPackageFileAsync("maui.pdf");
+                await using FileStream localFileStream = File.OpenWrite(pdfFilePath);
+
+                await sourceStream.CopyToAsync(localFileStream);
+            }
+
+            string result = await OpenPdf(pdfFilePath);
 
             FeedbackLabel.Text = result;
         }
@@ -106,6 +130,7 @@ namespace MauiTestApp
                 else if (result.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
                 {
                     DisplayPdf(localFilePath);
+                    _pickedPdf = localFilePath;
                 }
 
                 // show where the photo has been stored
@@ -117,6 +142,15 @@ namespace MauiTestApp
                 // The user canceled or something went wrong
                 return "Something went wrong";
             }
+        }
+
+        public async Task<string> OpenPdf(string fullFilePath)
+        {
+            string popoverTitle = "Open pdf file";
+
+            bool fileWasOpened = await Launcher.Default.OpenAsync(new OpenFileRequest(popoverTitle, new ReadOnlyFile(fullFilePath)));
+
+            return fileWasOpened ? "File has been opened by the pdf viewer" : "File didn't open for some reason";
         }
 
         public void DisplayPdf(string filePath)
