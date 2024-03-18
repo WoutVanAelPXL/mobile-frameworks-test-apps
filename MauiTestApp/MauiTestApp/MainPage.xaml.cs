@@ -148,7 +148,7 @@ namespace MauiTestApp
         {
             string popoverTitle = "Open pdf file";
 
-            bool fileWasOpened = await Launcher.Default.OpenAsync(new OpenFileRequest(popoverTitle, new ReadOnlyFile(fullFilePath)));
+            bool fileWasOpened = await Launcher.Default.OpenAsync(new OpenFileRequest(popoverTitle, new ReadOnlyFile(fullFilePath, "application/pdf")));
 
             return fileWasOpened ? "File has been opened by the pdf viewer" : "File didn't open for some reason";
         }
