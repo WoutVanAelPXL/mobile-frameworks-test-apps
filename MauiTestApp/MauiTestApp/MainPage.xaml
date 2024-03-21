@@ -53,6 +53,13 @@
                 Clicked="OpenPdfAsync"
                 HorizontalOptions="Fill" />
 
+            <Button
+                x:Name="NotificationBtn"
+                Text="Show notification" 
+                SemanticProperties.Hint="Tels the app to send a notification"
+                Clicked="ShowNotificationAsync"
+                HorizontalOptions="Fill" />
+
             <Grid VerticalOptions="FillAndExpand" HeightRequest="750" 
                   Margin="10">
 

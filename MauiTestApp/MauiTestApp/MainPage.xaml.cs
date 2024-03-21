@@ -1,4 +1,5 @@
-﻿#if ANDROID
+﻿using Plugin.LocalNotification;
+#if ANDROID
     using System.Net;
 #endif
 
@@ -36,6 +37,13 @@ namespace MauiTestApp
         private async void PickFileAsync(object sender, EventArgs e)
         {
             string result = await PickFile();
+
+            FeedbackLabel.Text = result;
+        }
+
+        private async void ShowNotificationAsync(object sender, EventArgs e)
+        {
+            string result = await ShowLocalNotification();
 
             FeedbackLabel.Text = result;
         }
@@ -167,6 +175,35 @@ namespace MauiTestApp
 #else
             PdfWebView.Source = filePath;
 #endif
+        }
+
+        public async Task<string> ShowLocalNotification()
+        {
+            if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
+            {
+                await LocalNotificationCenter.Current.RequestNotificationPermission();
+            }
+
+            var notification = new NotificationRequest
+            {
+                NotificationId = 100,
+                Title = "Test",
+                Description = "Test Description",
+                ReturningData = "Dummy data", // Returning data when tapped on notification.
+                Schedule =
+                {
+                    NotifyTime = DateTime.Now.AddSeconds(15) // Used for Scheduling local notification, if not specified notification will show immediately.
+                },
+                Android =
+                {
+                    ChannelId = "my_channel_01"
+                }
+            };
+            bool result = await LocalNotificationCenter.Current.Show(notification);
+
+            if (result) return "Successfully shown notification!";
+
+            return "Failed somehow";
         }
     }
 

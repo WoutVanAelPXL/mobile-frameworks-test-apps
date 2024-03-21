@@ -15,6 +15,19 @@ using Android.Runtime;
 [assembly: UsesFeature("android.hardware.camera", Required = true)]
 [assembly: UsesFeature("android.hardware.camera.autofocus", Required = true)]
 
+// [START] Permissions for LocalNotification plugin
+[assembly: UsesPermission(Android.Manifest.Permission.WakeLock)]
+
+//Required so that the plugin can reschedule notifications upon a reboot
+[assembly: UsesPermission(Android.Manifest.Permission.ReceiveBootCompleted)]
+[assembly: UsesPermission(Android.Manifest.Permission.Vibrate)]
+[assembly: UsesPermission("android.permission.POST_NOTIFICATIONS")]
+
+[assembly: UsesPermission("android.permission.USE_EXACT_ALARM")]
+[assembly: UsesPermission("android.permission.SCHEDULE_EXACT_ALARM")]
+// [END] Permissions for LocalNotification plugin
+
+
 namespace MauiTestApp
 {
     [Application]
