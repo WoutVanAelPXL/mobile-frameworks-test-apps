@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
+import * as Notifications from 'expo-notifications';
 
 export default function App() {
   const [image, setImage] = useState(null);
@@ -52,12 +53,38 @@ export default function App() {
     }
   }
 
+  const schedulePushNotification = async () => {
+    console.log('scheduling...');
+
+    // First, set the handler that will cause the notification
+    // to show the alert
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
+
+    await Notifications.requestPermissionsAsync();
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got mail! 📬",
+        body: 'Here is the notification body',
+        data: { data: 'goes here' },
+      },
+      trigger: { seconds: 5 },
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
       <Text>{message}</Text>
       <Button title="Take an image from camera roll" onPress={takeImage} />
       <Button title="Select a file from storage" onPress={takeDocument} />
+      <Button title="Schedule local notification" onPress={schedulePushNotification} />
       {image && <Image source={{ uri: image }} style={{ width: 400, height: 500 }} />}
       <StatusBar style="auto" />
     </View>
