@@ -41,9 +41,21 @@ namespace MauiTestApp
             FeedbackLabel.Text = result;
         }
 
-        private async void ShowNotificationAsync(object sender, EventArgs e)
+        private async void ShowNotificationInstantlyAsync(object sender, EventArgs e)
         {
-            string result = await ShowLocalNotification();
+            string result = await ShowLocalNotification(null);
+
+            FeedbackLabel.Text = result;
+        }
+
+        private async void ShowNotificationDelayedAsync(object sender, EventArgs e)
+        {
+            var schedule = new NotificationRequestSchedule
+            {
+                NotifyTime = DateTime.Now.AddSeconds(3)
+            };
+
+            string result = await ShowLocalNotification(schedule);
 
             FeedbackLabel.Text = result;
         }
@@ -177,28 +189,43 @@ namespace MauiTestApp
 #endif
         }
 
-        public async Task<string> ShowLocalNotification()
+        public async Task<string> ShowLocalNotification(NotificationRequestSchedule? schedule)
         {
             if (await LocalNotificationCenter.Current.AreNotificationsEnabled() == false)
             {
                 await LocalNotificationCenter.Current.RequestNotificationPermission();
             }
 
-            var notification = new NotificationRequest
+            NotificationRequest notification;
+            if (schedule != null)
             {
-                NotificationId = 100,
-                Title = "Test",
-                Description = "Test Description",
-                ReturningData = "Dummy data", // Returning data when tapped on notification.
-                Schedule =
+                notification = new NotificationRequest
                 {
-                    NotifyTime = DateTime.Now.AddSeconds(15) // Used for Scheduling local notification, if not specified notification will show immediately.
-                },
-                Android =
+                    NotificationId = 100,
+                    Title = "Instant notification",
+                    Description = "Test Description",
+                    ReturningData = "Dummy data", // Returning data when tapped on notification.
+                    Schedule = schedule,
+                    Android =
+                    {
+                        ChannelId = "my_channel_01"
+                    }
+                };
+            }
+            else
+            {
+                notification = new NotificationRequest
                 {
-                    ChannelId = "my_channel_01"
-                }
-            };
+                    NotificationId = 100,
+                    Title = "Scheduled notification",
+                    Description = "Test Description",
+                    ReturningData = "Dummy data", // Returning data when tapped on notification.
+                    Android =
+                    {
+                        ChannelId = "my_channel_01"
+                    }
+                };
+            }
             bool result = await LocalNotificationCenter.Current.Show(notification);
 
             if (result) return "Successfully shown notification!";

@@ -31,10 +31,10 @@ namespace MauiTestApp
                     Title = "Hey! niet wegslepen",
                     Description = "GRRRRR",
                     ReturningData = "Dummy data", // Returning data when tapped on notification.
-                    Schedule =
-                    {
-                        NotifyTime = DateTime.Now.AddSeconds(3) // Used for Scheduling local notification, if not specified notification will show immediately.
-                    },
+                    //Schedule =
+                    //{
+                    //    NotifyTime = DateTime.Now.AddSeconds(1) // Used for Scheduling local notification, if not specified notification will show immediately.
+                    //},
                     Android =
                     {
                         ChannelId = "my_channel_01"

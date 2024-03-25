@@ -54,10 +54,17 @@
                 HorizontalOptions="Fill" />
 
             <Button
-                x:Name="NotificationBtn"
+                x:Name="NotificationInstantBtn"
                 Text="Show notification" 
-                SemanticProperties.Hint="Tels the app to send a notification"
-                Clicked="ShowNotificationAsync"
+                SemanticProperties.Hint="Tells the app to send a notification"
+                Clicked="ShowNotificationInstantlyAsync"
+                HorizontalOptions="Fill" />
+
+            <Button
+                x:Name="NotificationDelayBtn"
+                Text="Show scheduled notification" 
+                SemanticProperties.Hint="Tells the app to send a notification"
+                Clicked="ShowNotificationDelayedAsync"
                 HorizontalOptions="Fill" />
 
             <Grid VerticalOptions="FillAndExpand" HeightRequest="750" 
